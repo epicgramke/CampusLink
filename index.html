@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101010">
+  <meta name="description" content="CampusLink connects Kenyan campus students with announcements, opportunities, events and student communities.">
+  <title>CampusLink | Connect. Discover. Belong.</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="CampusLink home">
+      <span class="brand-mark">C<span>L</span></span>
+      <span class="brand-name">Campus<span>Link</span><small>KENYA STUDENT NETWORK</small></span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+    <nav id="mainNav" class="main-nav">
+      <a href="#announcements">Announcements</a>
+      <a href="#communities">WhatsApp Groups</a>
+      <a href="#opportunities">Jobs & Attachments</a>
+      <a href="#events">Events</a>
+    </nav>
+    <a class="header-cta" href="#communities">Join the community <span>↗</span></a>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="live-dot"></span> BUILT FOR CAMPUS LIFE IN KENYA</div>
+        <h1>Your campus.<br>Your people.<br><em>Your next move.</em></h1>
+        <p class="hero-intro">One place for student updates, WhatsApp communities, career opportunities and events that move you forward.</p>
+        <div class="hero-actions">
+          <a class="button button-gold" href="#communities">Find your community <span>↗</span></a>
+          <a class="button button-outline" href="#opportunities">Explore opportunities</a>
+        </div>
+        <div class="hero-note"><span class="note-icon">✦</span> Stay informed. Meet your people. Make things happen.</div>
+      </div>
+      <div class="hero-art" aria-label="CampusLink student community illustration">
+        <div class="art-ring ring-one"></div><div class="art-ring ring-two"></div>
+        <div class="art-card card-top"><span class="mini-icon">✦</span><div><b>Campus updates</b><small>What matters, when it matters</small></div><span class="status-dot"></span></div>
+        <div class="art-monogram">CL<span>.</span></div>
+        <div class="art-caption">CONNECT<br><span>YOUR WAY</span></div>
+        <div class="art-card card-bottom"><div class="avatar-stack"><i>J</i><i>M</i><i>A</i><i>+</i></div><div><b>Student community</b><small>Better together</small></div></div>
+        <div class="spark spark-a">✦</div><div class="spark spark-b">✧</div>
+      </div>
+    </section>
+
+    <section class="ticker" aria-label="CampusLink features">
+      <span>STUDENT LIFE</span><b>✦</b><span>CAREER GROWTH</span><b>✦</b><span>REAL CONNECTIONS</span><b>✦</b><span>CAMPUS OPPORTUNITIES</span><b>✦</b>
+    </section>
+
+    <section class="section" id="announcements">
+      <div class="section-heading">
+        <div><div class="eyebrow">THE LATEST</div><h2>Campus <em>announcements.</em></h2></div>
+        <p>Useful updates for student life, gathered in one place.</p>
+      </div>
+      <div class="announcement-grid" id="announcementList"></div>
+    </section>
+
+    <section class="community-section" id="communities">
+      <div class="community-copy">
+        <div class="eyebrow">FIND YOUR PEOPLE</div>
+        <h2>Good things happen<br>when we <em>connect.</em></h2>
+        <p>Join student communities to share information, ask questions and keep up with campus conversations.</p>
+        <a class="button button-gold" id="mainWhatsapp" href="https://chat.whatsapp.com/" target="_blank" rel="noopener">Explore WhatsApp groups ↗</a>
+        <small class="hint">Replace the sample link with your real WhatsApp group or channel link.</small>
+      </div>
+      <div class="community-panel">
+        <div class="panel-top"><span class="whatsapp-symbol">◔</span><div><b>CampusLink communities</b><small>Find a group that fits you</small></div><span class="panel-dots">•••</span></div>
+        <div class="group-row"><div class="group-icon gold-icon">🎓</div><div><b>Campus Connect KE</b><small>Student updates & discussions</small></div><a class="join-link" href="https://chat.whatsapp.com/" target="_blank" rel="noopener">Join ↗</a></div>
+        <div class="group-row"><div class="group-icon green-icon">💼</div><div><b>Jobs & Attachments</b><small>Opportunities for students</small></div><a class="join-link" href="https://chat.whatsapp.com/" target="_blank" rel="noopener">Join ↗</a></div>
+        <div class="group-row"><div class="group-icon purple-icon">📚</div><div><b>Campus Study Circle</b><small>Study tips and peer support</small></div><a class="join-link" href="https://chat.whatsapp.com/" target="_blank" rel="noopener">Join ↗</a></div>
+        <div class="group-row"><div class="group-icon blue-icon">🎉</div><div><b>Campus Events</b><small>Meetups, activities and more</small></div><a class="join-link" href="https://chat.whatsapp.com/" target="_blank" rel="noopener">Join ↗</a></div>
+        <div class="panel-foot"><span class="live-dot"></span> Your next connection could start here.</div>
+      </div>
+    </section>
+
+    <section class="section opportunities-section" id="opportunities">
+      <div class="section-heading">
+        <div><div class="eyebrow">LEVEL UP</div><h2>Opportunities to <em>move you forward.</em></h2></div>
+        <p>Discover work experience, internships and practical ways to grow.</p>
+      </div>
+      <div class="opportunity-grid" id="opportunityList"></div>
+      <p class="disclaimer">Always verify the organisation, application details and deadlines before sharing personal information or paying any fee.</p>
+    </section>
+
+    <section class="events-section" id="events">
+      <div class="events-intro"><div class="eyebrow">SAVE THE DATE</div><h2>Make room for<br><em>what's next.</em></h2><p>Keep an eye on student events, workshops and community meetups.</p></div>
+      <div class="event-list" id="eventList"></div>
+    </section>
+
+    <section class="join-banner">
+      <div><div class="eyebrow">CAMPUS LIFE, CONNECTED</div><h2>Don't miss what<br><em>happens next.</em></h2></div>
+      <a class="button button-dark" href="#communities">Join CampusLink <span>↗</span></a>
+      <div class="banner-orbit"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="#home"><span class="brand-mark">C<span>L</span></span><span class="brand-name">Campus<span>Link</span><small>KENYA STUDENT NETWORK</small></span></a>
+    <p>Connecting students to information, people and possibilities.</p>
+    <div class="footer-links"><a href="#announcements">Updates</a><a href="#communities">Communities</a><a href="#opportunities">Opportunities</a><a href="#events">Events</a></div>
+    <small class="copyright">© <span id="year"></span> CampusLink. Made for campus life.</small>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
