@@ -316,16 +316,27 @@ function bindPage(slug) {
 }
 
 async function render() {
-  const slug = location.hash.slice(1) || 'home';
+  const requestedPage = location.hash.slice(1) || 'login';
+
   await refreshSession();
 
+  if (!currentUser && !['login', 'register'].includes(requestedPage)) {
+    location.hash = 'login';
+    return;
+  }
+
+  let slug = requestedPage;
   let content;
+
   if (slug === 'home') content = home();
   else if (slug === 'register') content = authPage('register');
   else if (slug === 'login') content = authPage('login');
   else if (slug === 'profile') content = profilePage();
   else if (demoListings[slug]) content = listingPage(slug);
-  else content = home();
+  else {
+    slug = 'home';
+    content = home();
+  }
 
   app.innerHTML = getStyles() + header() + content + footer();
   document.title = 'CAMPUS CONNECT | ' + slug.toUpperCase();
