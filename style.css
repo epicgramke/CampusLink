@@ -5,7 +5,7 @@ position: relative;
 display: flex;
 align-items: center;
 justify-content: flex-start;
-padding-left: 140px;
+padding-left: 110px;
 border-bottom: 2px solid #3d3d3d;
 }
 
@@ -14,6 +14,8 @@ font-family: "Barlow Condensed", Impact, sans-serif;
 font-size: clamp(2.4rem, 7vw, 4rem);
 font-weight: 800;
 text-align: left;
+transform: translateX(-35px);
+white-space: nowrap;
 }
 
 .home-logo span {
@@ -56,22 +58,22 @@ padding-left: 80px;
 }
 
 .back {
-    width: 56px;
-    height: 56px;
-    top: 18px;
-    font-size: 52px;
+width: 56px;
+height: 56px;
+top: 18px;
+font-size: 52px;
 }
 
 .menu {
-    top: 15px;
-    height: 62px;
-    min-width: 145px;
+top: 15px;
+height: 62px;
+min-width: 145px;
 }
 
 .home-logo {
-    font-size: clamp(1rem, 4vw, 2rem);
+font-size: clamp(1rem, 4vw, 2rem);
+transform: translateX(-20px);
 }
-
 }
 
 @media (max-width: 480px) {
@@ -80,17 +82,17 @@ padding-left: 65px;
 }
 
 .home-logo {
-    font-size: 1rem;
+font-size: 1rem;
+transform: translateX(-15px);
 }
 
 .menu {
-    min-width: 85px;
-    right: 8px;
-    font-size: 0.75rem;
+min-width: 85px;
+right: 8px;
+font-size: 0.75rem;
 }
 
 .back {
-    left: 8px;
+left: 8px;
 }
-
 }
