@@ -217,7 +217,6 @@ function categoryCards() {
     <span class="category-icon" aria-hidden="true">${item.icon}</span><span><strong>${item.title}</strong><small>${item.description}</small></span>
   </a>`).join('');
 }
-
 function listingCards(items) {
   if (!items.length) return '<div class="empty">No sample listings are available for this category yet.</div>';
   return `<div class="listing-grid">${items.map(item => {
@@ -227,12 +226,57 @@ function listingCards(items) {
 }
 
 function renderHome(user) {
-  return `${header('home')}<main class="page">
-    <div class="page-head"><div><p class="eyebrow">YOUR STUDENT COMMUNITY</p><h1>Welcome, ${escapeHTML(displayName(user))}</h1><p class="muted">Choose a section to explore Campus Connect.</p></div></div>
-    <section aria-label="Campus Connect categories"><h2 class="section-title">Explore campus life</h2><div class="category-grid">${categoryCards()}</div></section>
-    <section><h2 class="section-title">Example listings</h2><p class="muted small">These are sample cards showing how listings will look. They are not live posts.</p>${listingCards(SAMPLE_LISTINGS.slice(0, 3))}</section>
-    <section><h2 class="section-title">Announcements and activities</h2>${listingCards(SAMPLE_LISTINGS.filter(item => ['events', 'announcements', 'internships'].includes(item.category)))}</section>
-  </main><footer class="footer">Campus Connect Kenya</footer>`;
+  return `${header('home')}
+    <main class="page campus-home">
+
+      <section class="home-intro">
+        <p class="eyebrow">YOUR STUDENT COMMUNITY</p>
+
+        <form id="campus-search" class="campus-search">
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input
+            id="campus-search-input"
+            type="search"
+            placeholder="Search items, food, jobs, hostels..."
+            aria-label="Search campus categories"
+          >
+          <button type="submit" aria-label="Search">⌕</button>
+        </form>
+      </section>
+
+      <section aria-label="Campus Connect categories">
+        <h2 class="section-title">EXPLORE CAMPUS LIFE</h2>
+
+        <div class="category-grid" id="campus-category-grid">
+          ${categoryCards()}
+        </div>
+
+        <p id="campus-search-empty" class="empty" hidden>
+          No matching campus categories found.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="section-title">Example listings</h2>
+        <p class="muted small">
+          These are sample listings, not live posts.
+        </p>
+        ${listingCards(SAMPLE_LISTINGS.slice(0, 3))}
+      </section>
+
+      <section>
+        <h2 class="section-title">Announcements and activities</h2>
+        ${listingCards(
+          SAMPLE_LISTINGS.filter(item =>
+            ['events', 'announcements', 'internships']
+              .includes(item.category)
+          )
+        )}
+      </section>
+
+    </main>
+    <footer class="footer">Campus Connect Kenya</footer>`;
+}
 }
 
 function header(route) {
