@@ -254,13 +254,13 @@ function header(route) {
         </a>
 
         <button
-          class="menu-toggle"
-          id="menu-toggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="main-navigation">
-          ☰ Menu
-        </button>
+  class="menu-toggle"
+  id="menu-toggle"
+  type="button"
+  onclick="const n=document.getElementById('main-navigation'); n.hidden=!n.hidden; this.textContent=n.hidden?'☰ Menu':'✕ Close';"
+>
+  ☰ Menu
+</button>
 
         <nav class="navlinks"
              id="main-navigation"
