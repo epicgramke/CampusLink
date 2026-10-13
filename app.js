@@ -137,11 +137,8 @@ function header() {
 <img
   class="logo"
   src="file_0000000035f4820ca4808dcd6dfe18e1.png"
-  alt="Campus Connect Kenya"
->"
-  alt="Campus Connect Kenya"
 >
- <span>
+ <sp>
             CAMPUS CONNECT<br>
             <span class="brand-tag">YOUR CAMPUS. YOUR COMMUNITY.</span>
           </span>
