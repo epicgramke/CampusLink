@@ -207,9 +207,6 @@ function header(route) {
           <a href="#profile" class="${route === 'profile' ? 'active' : ''}">
             My profile
           </a>
-          <button class="logout" id="logout-button" type="button">
-            Sign out
-          </button>
         </nav>
       </div>
     </header>`;
