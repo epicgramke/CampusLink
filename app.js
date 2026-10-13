@@ -46,78 +46,121 @@ function categoryById(id) { return CATEGORIES.find(item => item.id === id); }
 function displayName(user) {
   return user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Student';
 }
-
-function showConfigError(message) {
-  app.innerHTML = `<main class="error-screen"><p class="eyebrow">CAMPUS CONNECT</p><h1>Website setup needs attention</h1><p>${escapeHTML(message)}</p><p class="muted">Check that the Supabase URL and publishable key in <code>app.js</code> are correct, and that the Supabase project is available.</p></main>`;
-}
-
-function renderAuth(mode = 'login', message = '') {
+  function renderAuth(mode = 'login', message = '') {
   const isRegister = mode === 'register';
+
   app.innerHTML = `
     <main class="auth-layout">
-      <section class="auth-side" aria-label="Campus Connect">
-        <div class="auth-logo">CAMPUS<br><span>CONNECT</span></div>
-        <p>A digital space for student life in Kenya.</p>
-        <div class="auth-points">
-          <div><b>✦</b><span>Marketplace, food and hostels</span></div>
-          <div><b>✦</b><span>Jobs and internships</span></div>
-          <div><b>✦</b><span>Events, notices and lost items</span></div>
-        </div>
-      </section>
       <section class="auth-card">
         <p class="eyebrow">STUDENT ACCESS</p>
         <h1>${isRegister ? 'Create your account' : 'Welcome back'}</h1>
         <p class="muted">${isRegister ? 'Register to access the Campus Connect community.' : 'Sign in to continue to Campus Connect.'}</p>
+
         <div id="auth-notice" class="notice" role="status"></div>
+
         <form id="auth-form">
-          ${isRegister ? `<div class="field"><label for="full-name">Full name</label><input id="full-name" name="fullName" autocomplete="name" maxlength="80" required placeholder="Your full name"></div>` : ''}
-          <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com"></div>
-          <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="${isRegister ? 'new-password' : 'current-password'}" minlength="6" required placeholder="At least 6 characters"></div>
-          ${isRegister ? `<div class="field"><label for="confirm-password">Confirm password</label><input id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="6" required placeholder="Enter password again"></div>` : ''}
-          <button class="primary" type="submit" id="auth-submit">${isRegister ? 'Create account' : 'Sign in'}</button>
+          ${isRegister ? `
+            <div class="field">
+              <label for="full-name">Full name</label>
+              <input id="full-name" name="fullName" autocomplete="name" maxlength="80" required placeholder="Your full name">
+            </div>
+          ` : ''}
+
+          <div class="field">
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="${isRegister ? 'new-password' : 'current-password'}" minlength="6" required placeholder="At least 6 characters">
+          </div>
+
+          ${isRegister ? `
+            <div class="field">
+              <label for="confirm-password">Confirm password</label>
+              <input id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="6" required placeholder="Enter password again">
+            </div>
+          ` : ''}
+
+          <button class="primary" type="submit" id="auth-submit">
+            ${isRegister ? 'Create account' : 'Sign in'}
+          </button>
         </form>
-        <div class="auth-switch">${isRegister ? 'Already have an account?' : 'New to Campus Connect?'} <button class="text-button" id="auth-switch" type="button">${isRegister ? 'Sign in' : 'Create account'}</button></div>
+
+        <div class="auth-switch">
+          ${isRegister ? 'Already have an account?' : 'New to Campus Connect?'}
+          <button class="text-button" id="auth-switch" type="button">
+            ${isRegister ? 'Sign in' : 'Create account'}
+          </button>
+        </div>
       </section>
     </main>`;
 
-  document.getElementById('auth-switch').addEventListener('click', () => go(isRegister ? 'login' : 'register'));
+  document.getElementById('auth-switch').addEventListener('click', () => {
+    go(isRegister ? 'login' : 'register');
+  });
+
   if (message) setNotice(message, 'success');
+
   document.getElementById('auth-form').addEventListener('submit', async event => {
     event.preventDefault();
+
     const form = event.currentTarget;
     const email = form.elements.email.value.trim();
     const password = form.elements.password.value;
     const submit = document.getElementById('auth-submit');
+
     if (isRegister) {
       const name = form.elements.fullName.value.trim();
       const confirmation = form.elements.confirmPassword.value;
+
       if (!name) return setNotice('Enter your full name.', 'error');
       if (password !== confirmation) return setNotice('The passwords do not match.', 'error');
       if (password.length < 6) return setNotice('Use a password with at least 6 characters.', 'error');
+
       submit.disabled = true;
       submit.textContent = 'Creating account…';
+
       const emailRedirectTo = `${window.location.origin}${window.location.pathname}#login`;
+
       const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
-        options: { data: { full_name: name }, emailRedirectTo }
+        options: {
+          data: { full_name: name },
+          emailRedirectTo
+        }
       });
+
       submit.disabled = false;
       submit.textContent = 'Create account';
+
       if (error) return setNotice(error.message, 'error');
+
       if (data.session) {
         currentSession = data.session;
         go('home');
       } else {
-        setNotice('Account created. Check your email for a confirmation link, then return here to sign in.', 'success');
+        setNotice(
+          'Account created. Check your email for a confirmation link, then return here to sign in.',
+          'success'
+        );
       }
     } else {
       submit.disabled = true;
       submit.textContent = 'Signing in…';
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
       submit.disabled = false;
       submit.textContent = 'Sign in';
+
       if (error) return setNotice(error.message, 'error');
+
       currentSession = data.session;
       go('home');
     }
