@@ -173,10 +173,10 @@ function home() {
   return `
     <section class="hero"><div class="wrap">
       <span class="pill">KENYA'S STUDENT COMMUNITY</span>
-      <h1>YOUR CAMPUS.<br><span class="gold">YOUR OPPORTUNITIES.</span></h1>
+      <h1><br><span class="gold"></span></h1>
       <p>MEET STUDENTS, DISCOVER FOOD, BUY AND SELL PRODUCTS, FIND ACCOMMODATION AND EXPLORE OPPORTUNITIES ACROSS KENYA.</p>
-      <p><a class="btn" href="#marketplace">EXPLORE MARKETPLACE →</a>
-      <a class="btn outline" href="#food">FIND FOOD</a></p>
+      <p><a class="btn" href="#marketplace">→</a>
+      <a class="btn outline" href="#food"></a></p>
       ${currentUser ? `<p>WELCOME, ${escapeHTML(currentProfile?.full_name || currentUser.email)}!</p>` :
         '<p>JOIN YOUR CAMPUS COMMUNITY.</p><a class="btn" href="#register">CREATE ACCOUNT</a> <a class="btn outline" href="#login">LOGIN</a>'}
     </div></section>
