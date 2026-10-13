@@ -336,7 +336,63 @@ function renderProfile(user) {
     </main><footer class="footer">Campus Connect Kenya</footer>`;
 }
 
-async function render() {
+function setupCampusSearch() {
+  const form = document.getElementById('campus-search');
+  const input = document.getElementById('campus-search-input');
+  const grid = document.getElementById('campus-category-grid');
+  const empty = document.getElementById('campus-search-empty');
+
+  if (!form || !input || !grid || !empty) return;
+
+  function filterCategories() {
+    const query = input.value.trim().toLowerCase();
+    let visible = 0;
+
+    grid.querySelectorAll('.category-card').forEach(card => {
+      const matches = card.textContent.toLowerCase().includes(query);
+      card.hidden = !matches;
+      if (matches) visible++;
+    });
+
+    empty.hidden = visible !== 0;
+  }
+
+  input.addEventListener('input', filterCategories);
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    filterCategories();
+  });
+function setupCampusSearch() {
+  const form = document.getElementById('campus-search');
+  const input = document.getElementById('campus-search-input');
+  const grid = document.getElementById('campus-category-grid');
+  const empty = document.getElementById('campus-search-empty');
+
+  if (!form || !input || !grid || !empty) return;
+
+  function filterCategories() {
+    const query = input.value.trim().toLowerCase();
+    let visible = 0;
+
+    grid.querySelectorAll('.category-card').forEach(card => {
+      const matches = card.textContent.toLowerCase().includes(query);
+      card.hidden = !matches;
+      if (matches) visible++;
+    });
+
+    empty.hidden = visible !== 0;
+  }
+
+  input.addEventListener('input', filterCategories);
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    filterCategories();
+  });
+}
+
+  async function render() {
   const thisRender = ++renderNumber;
   if (!supabaseClient) return;
   const { data, error } = await supabaseClient.auth.getSession();
