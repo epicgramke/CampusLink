@@ -173,18 +173,46 @@ function setNotice(message, type = 'success') {
   box.className = `notice show ${type}`;
   box.textContent = message;
 }
-
 function header(route) {
-  const categoryLinks = CATEGORIES.map(item => `<a href="#${item.id}" class="${route === item.id ? 'active' : ''}">${item.title}</a>`).join('');
-  return `<header class="topbar"><div class="navwrap">
-    <a class="brand" href="#home" aria-label="Campus Connect home">CAMPUS <span>CONNECT</span></a>
-    <nav class="navlinks" aria-label="Main navigation">
-      <a href="#home" class="${route === 'home' ? 'active' : ''}">Home</a>
-      ${categoryLinks}
-      <a href="#profile" class="${route === 'profile' ? 'active' : ''}">My profile</a>
-      <button class="logout" id="logout-button" type="button">Sign out</button>
-    </nav>
-  </div></header>`;
+  const categoryLinks = CATEGORIES.map(item => `
+    <a href="#${item.id}" class="${route === item.id ? 'active' : ''}">
+      ${item.title}
+    </a>
+  `).join('');
+
+  return `
+    <header class="topbar">
+      <div class="navwrap">
+        <a class="brand" href="#home" aria-label="Campus Connect home">
+          CAMPUS <span>CONNECT</span>
+        </a>
+
+        <button
+          class="menu-toggle"
+          id="menu-toggle"
+          type="button"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="main-navigation"
+        >
+          ☰ Menu
+        </button>
+
+        <nav class="navlinks" id="main-navigation"
+             aria-label="Main navigation" hidden>
+          <a href="#home" class="${route === 'home' ? 'active' : ''}">
+            Home
+          </a>
+          ${categoryLinks}
+          <a href="#profile" class="${route === 'profile' ? 'active' : ''}">
+            My profile
+          </a>
+          <button class="logout" id="logout-button" type="button">
+            Sign out
+          </button>
+        </nav>
+      </div>
+    </header>`;
 }
 
 function categoryCards() {
