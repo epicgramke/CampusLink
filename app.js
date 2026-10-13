@@ -126,8 +126,7 @@ function header() {
         CAMPUS CONNECT KENYA · YOUR CAMPUS, YOUR COMMUNITY
       </div>
     </div>
-
-    <header class="header">
+<header class="header">
       <div class="wrap headrow">
 
         <a class="brand" href="#home">
