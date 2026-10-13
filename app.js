@@ -173,19 +173,20 @@ function home() {
   return `
     <section class="hero"><div class="wrap">
       <span class="pill">KENYA'S STUDENT COMMUNITY</span>
-      <h1><br><span class="gold"></span></h1>
+
       <p>MEET STUDENTS, DISCOVER FOOD, BUY AND SELL PRODUCTS, FIND ACCOMMODATION AND EXPLORE OPPORTUNITIES ACROSS KENYA.</p>
-      <p><a class="btn" href="#marketplace">→</a>
-      <a class="btn outline" href="#food"></a></p>
+
       ${currentUser ? `<p>WELCOME, ${escapeHTML(currentProfile?.full_name || currentUser.email)}!</p>` :
         '<p>JOIN YOUR CAMPUS COMMUNITY.</p><a class="btn" href="#register">CREATE ACCOUNT</a> <a class="btn outline" href="#login">LOGIN</a>'}
     </div></section>
+
     <section class="section wrap"><h2>EXPLORE CAMPUS CONNECT</h2>
       <div class="feature-grid">${sections.map(s => `
         <a class="feature" href="#${s.slug}"><span class="gold">✦</span>
         <h3>${s.title}</h3><p>${s.desc}</p></a>`).join('')}
       </div>
     </section>
+
     <section class="section wrap"><div class="panel">
       <h2>YOUR CAMPUS. YOUR COMMUNITY.</h2>
       <p>START EXPLORING CAMPUS LIFE IN ONE PLACE.</p>
