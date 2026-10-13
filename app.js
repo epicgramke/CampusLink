@@ -53,7 +53,7 @@ function displayName(user) {
     <main class="auth-layout">
       <section class="auth-card">
         <p class="eyebrow">STUDENT ACCESS</p>
-        <h1>${isRegister ? 'Create your account' : 'Welcome back'}</h1>
+        <h1>${isRegister ? 'Create your account' : 'WELCOME BACK'}</h1>
         <p class="muted">${isRegister ? 'Register to access the Campus Connect community.' : 'Sign in to continue to Campus Connect.'}</p>
 
         <div id="auth-notice" class="notice" role="status"></div>
