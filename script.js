@@ -2,7 +2,7 @@
    This browser code uses only the project's public/publishable key.
    Never place a Supabase service_role or secret key in frontend code. */
 'use strict';
-
+alert('Campus Connect JavaScript loaded');
 const SUPABASE_URL = 'https://ojbzbkvruehrntdxktse.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_ni_wAGg6BAmSD4Spho5qbQ_Z35xJjrA';
 
