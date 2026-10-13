@@ -74,7 +74,15 @@ function setAuthMode(mode) {
   $('auth-password').autocomplete=signup?'new-password':'current-password';
   $('auth-name').required=signup;
   $('auth-switch').innerHTML=signup?'Already have an account? <button class="link-button" id="switch-auth" type="button">Log in</button>':`Don't have an account? <button class="link-button" id="switch-auth" type="button">Sign up</button>`;
-  $('switch-auth').addEventListener('click',()=>setAuthMode(authMode==='login'?'signup':'login'));
+$('auth-switch').addEventListener('click', (event) => {
+  if (event.target.closest('#switch-auth')) {
+    setAuthMode(
+      document.querySelector('.signup-only')?.classList.contains('hidden')
+        ? 'signup'
+        : 'login'
+    );
+  }
+});
   clearStatus($('auth-status'));
 }
 $('login-tab').addEventListener('click',()=>setAuthMode('login'));
