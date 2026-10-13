@@ -238,16 +238,53 @@ function renderHome(user) {
   </main><footer class="footer">Campus Connect Kenya</footer>`;
 }
 
-function renderCategory(user, route) {
-  const category = categoryById(route);
-  const items = SAMPLE_LISTINGS.filter(item => item.category === route);
-  return `${header(route)}<main class="page">
-    <div class="page-head"><div><p class="eyebrow">CAMPUS CONNECT</p><h1>${category.icon} ${category.title}</h1><p class="muted">${category.description}</p></div><a class="text-button" href="#home">← Back home</a></div>
-    ${listingCards(items)}
-    <p class="muted small" style="margin-top:18px">Sample content only. Live posts need to be connected to your Supabase database.</p>
-  </main><footer class="footer">Campus Connect Kenya</footer>`;
-}
+function header(route) {
+  const categoryLinks = CATEGORIES.map(item => `
+    <a href="#${item.id}"
+       class="${route === item.id ? 'active' : ''}">
+      ${item.title}
+    </a>
+  `).join('');
 
+  return `
+    <header class="topbar">
+      <div class="navwrap">
+        <a class="brand" href="#home" aria-label="Campus Connect home">
+          CAMPUS <span>CONNECT</span>
+        </a>
+
+        <button
+          class="menu-toggle"
+          id="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="main-navigation">
+          ☰ Menu
+        </button>
+
+        <nav class="navlinks"
+             id="main-navigation"
+             aria-label="Main navigation"
+             hidden>
+          <a href="#home"
+             class="${route === 'home' ? 'active' : ''}">
+            Home
+          </a>
+
+          ${categoryLinks}
+
+          <a href="#profile"
+             class="${route === 'profile' ? 'active' : ''}">
+            My profile
+          </a>
+
+          <button class="logout" id="logout-button" type="button">
+            Sign out
+          </button>
+        </nav>
+      </div>
+    </header>`;
+}
 function renderProfile(user) {
   const metadata = user.user_metadata || {};
   const joined = user.created_at ? new Date(user.created_at).toLocaleDateString() : '—';
