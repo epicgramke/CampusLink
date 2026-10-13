@@ -119,27 +119,50 @@ function getStyles() {
     @media(max-width:650px){.headrow{align-items:flex-start}.nav{gap:10px}.hero{padding:30px 0}}
   </style>`;
 }
-
 function header() {
   return `
-    <div class="topline"><div class="wrap">CAMPUS CONNECT KENYA · YOUR CAMPUS, YOUR COMMUNITY</div></div>
-    <header class="header"><div class="wrap headrow">
-      <a class="brand" href="#home"><span class="logo">CC</span>
-        <span>CAMPUS CONNECT<br><span class="brand-tag">YOUR CAMPUS. YOUR COMMUNITY.</span></span>
-      </a>
-      <nav class="nav">
-        <a href="#home">HOME</a>
-        <a href="#marketplace">MARKETPLACE</a>
-        <a href="#food">FOOD</a>
-        <a href="#hostels">HOSTELS</a>
-        <a href="#jobs">JOBS</a>
-        <a href="#internships">INTERNSHIPS</a>
-        <a href="#lost-found">LOST & FOUND</a>
-        <a href="#events">EVENTS</a>
-        <a href="#announcements">UPDATES</a>
-        ${currentUser ? '<a href="#profile">MY PROFILE</a>' : '<a href="#login">LOGIN</a>'}
-      </nav>
-    </div></header>`;
+    <div class="topline">
+      <div class="wrap">
+        CAMPUS CONNECT KENYA · YOUR CAMPUS, YOUR COMMUNITY
+      </div>
+    </div>
+
+    <header class="header">
+      <div class="wrap headrow">
+
+        <a class="brand" href="#home">
+          <span class="logo">CC</span>
+          <span>
+            CAMPUS CONNECT<br>
+            <span class="brand-tag">YOUR CAMPUS. YOUR COMMUNITY.</span>
+          </span>
+        </a>
+
+        <button
+          class="mobile-menu"
+          id="mobileMenuBtn"
+          type="button"
+          aria-expanded="false"
+          aria-label="Open navigation menu"
+        >☰</button>
+
+        <nav class="nav" id="mainNav">
+          <a href="#home">HOME</a>
+          <a href="#marketplace">MARKETPLACE</a>
+          <a href="#food">FOOD</a>
+          <a href="#hostels">HOSTELS</a>
+          <a href="#jobs">JOBS</a>
+          <a href="#internships">INTERNSHIPS</a>
+          <a href="#lost-found">LOST &amp; FOUND</a>
+          <a href="#events">EVENTS</a>
+          <a href="#announcements">UPDATES</a>
+          ${currentUser
+            ? '<a href="#profile">MY PROFILE</a>'
+            : '<a href="#login">LOGIN</a>'}
+        </nav>
+
+      </div>
+    </header>`;
 }
 
 function footer() {
