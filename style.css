@@ -119,10 +119,18 @@
     }
 
     .logo{
-      border:2px solid var(--gold);
-      border-radius:12px;
-      padding:10px;
-      color:var(--gold-light);
+      
+.logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  display: block;
+  border: none;
+  padding: 0;
+  background: transparent;
+  flex-shrink: 0;
+}
+
     }
 
     .brand-tag{
