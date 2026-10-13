@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050505">
+<meta name="description" content="Campus Connect Kenya">
+<title>Campus Connect Kenya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- LOGIN / SIGN UP -->
+<section id="auth-page" class="auth-page">
+  <div class="corner corner-top"></div><div class="corner corner-bottom"></div>
+  <main class="auth-shell">
+    <header class="brand">
+      <div class="brand-mark">CC</div>
+      <div class="brand-name"><span>CAMPUS</span> CONNECT</div>
+      <div class="brand-country"><i></i>K E N Y A<i></i></div>
+      <p class="brand-motto">Connect <b>•</b> Buy <b>•</b> Sell <b>•</b> Share</p>
+      <p class="brand-tagline">Your Campus, Our Community</p>
+    </header>
+
+    <section class="auth-card">
+      <p class="eyebrow" id="auth-eyebrow">WELCOME TO YOUR COMMUNITY</p>
+      <h1 id="auth-title">Welcome <span>Back!</span></h1>
+      <p class="subtitle" id="auth-subtitle">Log in to your Campus Connect account</p>
+
+      <form id="auth-form">
+        <label class="field"><span>✉</span><input id="email" type="email" placeholder="Email address" autocomplete="email" required></label>
+        <label class="field"><span>🔒</span><input id="password" type="password" placeholder="Password" minlength="6" autocomplete="current-password" required>
+          <button type="button" class="eye" id="toggle-password">◉</button>
+        </label>
+
+        <div class="form-options" id="login-options">
+          <label><input id="remember" type="checkbox" checked> Remember me</label>
+          <button type="button" class="text-button" id="forgot-password">Forgot password?</button>
+        </div>
+
+        <button class="primary-button" id="submit-button" type="submit"><span id="submit-label">Log In</span> →</button>
+      </form>
+
+      <div class="divider"><span></span>OR<span></span></div>
+
+      <button class="google-button" id="google-button">G <span>Continue with Google</span></button>
+
+      <p class="switch-mode" id="switch-copy">Don't have an account?
+        <button type="button" id="switch-mode">Sign Up</button>
+      </p>
+      <p class="status-message" id="status-message"></p>
+      <p class="security-note">● Secure sign-in powered by Supabase</p>
+    </section>
+  </main>
+</section>
+
+<!-- HOME PAGE -->
+<section id="home-page" class="home-page hidden">
+  <header class="topbar">
+    <button class="back" aria-label="Go back" onclick="history.back()">‹</button>
+    <div class="home-logo"><span>CAMPUS</span> CONNECT</div>
+    <button class="menu" onclick="toggleMenu()">☰ &nbsp; MENU</button>
+  </header>
+
+  <div id="menuPanel" class="menu-panel">
+    <button onclick="toggleMenu()">×</button>
+    <a href="#market">Marketlife</a><a href="#food">Food</a><a href="#hostels">Hostels</a>
+    <a href="#jobs">Jobs</a><a href="#internships">Internships</a><a href="#lost">Lost &amp; Found</a>
+    <button class="logout-link" onclick="logout()">LOG OUT</button>
+  </div>
+
+  <main class="home-content">
+    <h2>YOUR STUDENT COMMUNITY</h2>
+    <form class="search" onsubmit="return doSearch(event)">
+      <span>⌕</span><input id="searchInput" type="search" placeholder="SEARCH ITEMS, FOOD, JOBS, HOSTELS...">
+      <button type="submit">⌕</button>
+    </form>
+
+    <section class="explore">
+      <h2>EXPLORE CAMPUS LIFE</h2><div class="yellow-line"></div>
+      <div class="grid">
+        <a class="card" id="market" href="#" onclick="openCategory('MARKETLIFE');return false;"><div class="icon">🛒</div><div><h3>MARKETLIFE</h3><p>BUY &amp; SELL ON CAMPUS</p></div><b>›</b></a>
+        <a class="card" id="food" href="#" onclick="openCategory('FOOD');return false;"><div class="icon">🍴</div><div><h3>FOOD</h3><p>MEALS NEARBY</p></div><b>›</b></a>
+        <a class="card" id="hostels" href="#" onclick="openCategory('HOSTELS');return false;"><div class="icon">⌂</div><div><h3>HOSTELS</h3><p>FIND A ROOM</p></div><b>›</b></a>
+        <a class="card" id="jobs" href="#" onclick="openCategory('JOBS');return false;"><div class="icon">💼</div><div><h3>JOBS</h3><p>WORK OPPORTUNITIES</p></div><b>›</b></a>
+        <a class="card" id="internships" href="#" onclick="openCategory('INTERNSHIPS');return false;"><div class="icon">🎓</div><div><h3>INTERNSHIPS</h3><p>ATTACHMENTS</p></div><b>›</b></a>
+        <a class="card" id="lost" href="#" onclick="openCategory('LOST & FOUND');return false;"><div class="icon">🔎</div><div><h3>LOST &amp; FOUND</h3><p>FIND YOUR ITEMS</p></div><b>›</b></a>
+      </div>
+    </section>
+  </main>
+  <div id="toast" class="toast"></div>
+</section>
+
+<script src="config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
