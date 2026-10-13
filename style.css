@@ -78,3 +78,56 @@
   font: inherit;
   cursor: pointer;
 }
+
+
+/* Campus Connect homepage search */
+.campus-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 18px 0 35px;
+  padding: 7px 8px 7px 18px;
+  border: 2px solid #ffe000;
+  border-radius: 22px;
+  background: #080808;
+}
+
+.campus-search .search-icon {
+  font-size: 1.6rem;
+  color: #ffe000;
+}
+
+.campus-search input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: white;
+}
+
+.campus-search input:focus {
+  box-shadow: none;
+}
+
+.campus-search button {
+  width: 58px;
+  min-height: 54px;
+  border: 0;
+  border-radius: 17px;
+  background: #ffe000;
+  color: #080808;
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.campus-search button:hover {
+  background: #fff34d;
+}
+
+.category-card[hidden],
+#campus-search-empty[hidden] {
+  display: none !important;
+}
