@@ -1,8 +1,11 @@
-/* Campus Connect Kenya — clean frontend + Supabase email authentication */
+
+/* Campus Connect Kenya — Supabase-connected frontend */
 'use strict';
 
 const SUPABASE_URL = 'https://ojbzbkvruehrntdxktse.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_ni_wAGg6BAmSD4Spho5qbQ_Z35xJjrA';
+const SUPABASE_PUBLISHABLE_KEY =
+  'sb_publishable_ni_wAGg6BAmSD4Spho5qbQ_Z35xJjrA';
+
 const app = document.getElementById('app');
 
 const CATEGORIES = [
@@ -16,16 +19,16 @@ const CATEGORIES = [
   { id: 'announcements', title: 'Announcements', icon: '📣', description: 'Important campus notices' }
 ];
 
-// These are clearly marked sample cards. They are not stored in the database.
+// Clearly marked demo content. These are not real database posts.
 const SAMPLE_LISTINGS = [
-  { category: 'marketplace', title: 'Used scientific calculator', description: 'Good working condition. Meet on campus to check before buying.', location: 'Campus meet-up', label: 'For sale' },
-  { category: 'food', title: 'Lunch specials', description: 'Add your daily menu and prices when publishing a real food listing.', location: 'Campus area', label: 'Food' },
-  { category: 'hostels', title: 'Student room listing', description: 'Add rent, deposit, available date and contact details for a real room.', location: 'Near campus', label: 'Accommodation' },
-  { category: 'jobs', title: 'Part-time opportunity', description: 'Check details, hours and requirements directly with the advertiser.', location: 'Campus area', label: 'Opportunity' },
-  { category: 'internships', title: 'Attachment opportunity', description: 'Add the organisation, field, deadline and application instructions.', location: 'Kenya', label: 'Career' },
-  { category: 'lost-found', title: 'Lost item notice', description: 'Describe the item and where it was last seen. Avoid posting private details.', location: 'Campus area', label: 'Notice' },
-  { category: 'events', title: 'Student community event', description: 'Add the event date, venue, entry fee and organiser contact.', location: 'Campus', label: 'Event' },
-  { category: 'announcements', title: 'Campus announcement', description: 'Use this category for verified notices and updates.', location: 'Campus', label: 'Notice' }
+  { category: 'marketplace', title: 'Scientific calculator', description: 'Example listing. Add a real product post when posting is enabled.', location: 'Campus', label: 'For sale' },
+  { category: 'food', title: 'Campus lunch', description: 'Example menu. Confirm prices and availability with the vendor.', location: 'Campus area', label: 'Food' },
+  { category: 'hostels', title: 'Student accommodation', description: 'Example room listing. Confirm rent, deposit and availability.', location: 'Near campus', label: 'Housing' },
+  { category: 'jobs', title: 'Part-time opportunity', description: 'Example only. Verify the employer and job requirements.', location: 'Kenya', label: 'Job' },
+  { category: 'internships', title: 'Attachment opportunity', description: 'Example only. Confirm the organisation and deadline.', location: 'Kenya', label: 'Career' },
+  { category: 'lost-found', title: 'Lost item notice', description: 'Example notice. Do not post private or sensitive information.', location: 'Campus', label: 'Notice' },
+  { category: 'events', title: 'Student community event', description: 'Example event. Add the real date and venue when publishing.', location: 'Campus', label: 'Event' },
+  { category: 'announcements', title: 'Campus notice', description: 'Example announcement, not an official notice.', location: 'Campus', label: 'Notice' }
 ];
 
 let supabaseClient = null;
@@ -33,67 +36,125 @@ let currentSession = null;
 let renderNumber = 0;
 
 function escapeHTML(value) {
-  return String(value ?? '').replace(/[&<>"']/g, character => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-  })[character]);
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[ch]);
 }
 
 function currentRoute() {
-  return (window.location.hash || '').replace(/^#\/?/, '').trim().toLowerCase() || 'login';
+  return (location.hash || '#login')
+    .replace(/^#\/?/, '')
+    .trim()
+    .toLowerCase() || 'login';
 }
-function go(route) { window.location.hash = `#${route}`; }
-function categoryById(id) { return CATEGORIES.find(item => item.id === id); }
+
+function go(route) {
+  location.hash = route;
+}
+
+function categoryById(id) {
+  return CATEGORIES.find(category => category.id === id);
+}
+
 function displayName(user) {
-  return user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Student';
+  return user?.user_metadata?.full_name ||
+    user?.email?.split('@')[0] || 'Student';
 }
-  function renderAuth(mode = 'login', message = '') {
+
+function showMessage(message, type = 'success') {
+  const box = document.getElementById('app-notice');
+  if (!box) {
+    alert(message);
+    return;
+  }
+
+  box.textContent = message;
+  box.className = `notice show ${type}`;
+}
+
+function showFatalError(message) {
+  if (!app) {
+    alert(message);
+    return;
+  }
+
+  app.innerHTML = `
+    <main class="auth-layout">
+      <section class="auth-card">
+        <p class="eyebrow">CAMPUS CONNECT KENYA</p>
+        <h1>Unable to start</h1>
+        <p class="muted">${escapeHTML(message)}</p>
+        <button class="primary" onclick="location.reload()">
+          Try again
+        </button>
+      </section>
+    </main>`;
+}
+
+/* -------------------- LOGIN AND REGISTRATION -------------------- */
+
+function renderAuth(mode = 'login', message = '') {
   const isRegister = mode === 'register';
 
   app.innerHTML = `
     <main class="auth-layout">
       <section class="auth-card">
-        <p class="eyebrow">STUDENT ACCESS</p>
-        <h1>${isRegister ? 'Create your account' : 'WELCOME BACK'}</h1>
-        <p class="muted">${isRegister ? 'Register to access the Campus Connect community.' : 'Sign in to continue to Campus Connect.'}</p>
+        <p class="eyebrow">CAMPUS CONNECT KENYA</p>
+        <h1>${isRegister ? 'Create your account' : 'Welcome back'}</h1>
+        <p class="muted">
+          ${isRegister
+            ? 'Join your campus community.'
+            : 'Sign in to continue.'}
+        </p>
 
-        <div id="auth-notice" class="notice" role="status"></div>
+        <div id="app-notice" class="notice" role="status"></div>
 
         <form id="auth-form">
           ${isRegister ? `
             <div class="field">
               <label for="full-name">Full name</label>
-              <input id="full-name" name="fullName" autocomplete="name" maxlength="80" required placeholder="Your full name">
-            </div>
-          ` : ''}
+              <input id="full-name" name="fullName"
+                autocomplete="name" maxlength="80"
+                required placeholder="Your full name">
+            </div>` : ''}
 
           <div class="field">
             <label for="email">Email address</label>
-            <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
+            <input id="email" name="email" type="email"
+              autocomplete="email" maxlength="254"
+              required placeholder="you@example.com">
           </div>
 
           <div class="field">
             <label for="password">Password</label>
-            <input id="password" name="password" type="password" autocomplete="${isRegister ? 'new-password' : 'current-password'}" minlength="6" required placeholder="At least 6 characters">
+            <input id="password" name="password" type="password"
+              autocomplete="${isRegister ? 'new-password' : 'current-password'}"
+              minlength="6" required placeholder="At least 6 characters">
           </div>
 
           ${isRegister ? `
             <div class="field">
               <label for="confirm-password">Confirm password</label>
-              <input id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="6" required placeholder="Enter password again">
-            </div>
-          ` : ''}
+              <input id="confirm-password" name="confirmPassword"
+                type="password" autocomplete="new-password"
+                minlength="6" required placeholder="Enter password again">
+            </div>` : ''}
 
-          <button class="primary" type="submit" id="auth-submit">
+          <button class="primary" id="auth-submit" type="submit">
             ${isRegister ? 'Create account' : 'Sign in'}
           </button>
         </form>
 
-        <div class="auth-switch">
-          ${isRegister ? 'Already have an account?' : 'New to Campus Connect?'}
+        <p class="auth-switch">
+          ${isRegister ? 'Already registered?' : 'New to Campus Connect?'}
           <button class="text-button" id="auth-switch" type="button">
             ${isRegister ? 'Sign in' : 'Create account'}
           </button>
-        </div>
+        </p>
       </section>
     </main>`;
 
@@ -101,82 +162,92 @@ function displayName(user) {
     go(isRegister ? 'login' : 'register');
   });
 
-  if (message) setNotice(message, 'success');
+  if (message) showMessage(message);
 
-  document.getElementById('auth-form').addEventListener('submit', async event => {
-    event.preventDefault();
+  document.getElementById('auth-form').addEventListener(
+    'submit', async event => {
+      event.preventDefault();
 
-    const form = event.currentTarget;
-    const email = form.elements.email.value.trim();
-    const password = form.elements.password.value;
-    const submit = document.getElementById('auth-submit');
+      const form = event.currentTarget;
+      const email = form.elements.email.value.trim();
+      const password = form.elements.password.value;
+      const submit = document.getElementById('auth-submit');
 
-    if (isRegister) {
-      const name = form.elements.fullName.value.trim();
-      const confirmation = form.elements.confirmPassword.value;
+      if (isRegister) {
+        const name = form.elements.fullName.value.trim();
+        const confirmation = form.elements.confirmPassword.value;
 
-      if (!name) return setNotice('Enter your full name.', 'error');
-      if (password !== confirmation) return setNotice('The passwords do not match.', 'error');
-      if (password.length < 6) return setNotice('Use a password with at least 6 characters.', 'error');
-
-      submit.disabled = true;
-      submit.textContent = 'Creating account…';
-
-      const emailRedirectTo = `${window.location.origin}${window.location.pathname}#login`;
-
-      const { data, error } = await supabaseClient.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { full_name: name },
-          emailRedirectTo
+        if (!name) return showMessage('Enter your full name.', 'error');
+        if (password !== confirmation) {
+          return showMessage('Your passwords do not match.', 'error');
         }
-      });
+        if (password.length < 6) {
+          return showMessage('Use at least 6 password characters.', 'error');
+        }
 
-      submit.disabled = false;
-      submit.textContent = 'Create account';
+        submit.disabled = true;
+        submit.textContent = 'Creating account…';
 
-      if (error) return setNotice(error.message, 'error');
+        try {
+          const { data, error } = await supabaseClient.auth.signUp({
+            email,
+            password,
+            options: {
+              data: { full_name: name },
+              emailRedirectTo: `${location.origin}${location.pathname}#login`
+            }
+          });
 
-      if (data.session) {
-        currentSession = data.session;
-        go('home');
+          if (error) throw error;
+
+          if (data.session) {
+            currentSession = data.session;
+            go('home');
+            await render();
+          } else {
+            renderAuth(
+              'login',
+              'Account submitted. Check your email for a confirmation link, then sign in.'
+            );
+          }
+        } catch (error) {
+          showMessage(error.message || 'Registration failed.', 'error');
+          submit.disabled = false;
+          submit.textContent = 'Create account';
+        }
       } else {
-        setNotice(
-          'Account created. Check your email for a confirmation link, then return here to sign in.',
-          'success'
-        );
+        submit.disabled = true;
+        submit.textContent = 'Signing in…';
+
+        try {
+          const { data, error } =
+            await supabaseClient.auth.signInWithPassword({
+              email,
+              password
+            });
+
+          if (error) throw error;
+
+          currentSession = data.session;
+          go('home');
+          await render();
+        } catch (error) {
+          showMessage(error.message || 'Sign-in failed.', 'error');
+          submit.disabled = false;
+          submit.textContent = 'Sign in';
+        }
       }
-    } else {
-      submit.disabled = true;
-      submit.textContent = 'Signing in…';
-
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      submit.disabled = false;
-      submit.textContent = 'Sign in';
-
-      if (error) return setNotice(error.message, 'error');
-
-      currentSession = data.session;
-      go('home');
     }
-  });
+  );
 }
 
-function setNotice(message, type = 'success') {
-  const box = document.getElementById('auth-notice');
-  if (!box) return;
-  box.className = `notice show ${type}`;
-  box.textContent = message;
-}
+/* -------------------- NAVIGATION -------------------- */
+
 function header(route) {
-  const categoryLinks = CATEGORIES.map(item => `
-    <a href="#${item.id}" class="${route === item.id ? 'active' : ''}">
-      ${item.title}
+  const links = CATEGORIES.map(category => `
+    <a href="#${category.id}"
+      class="${route === category.id ? 'active' : ''}">
+      ${category.icon} ${category.title}
     </a>
   `).join('');
 
@@ -187,138 +258,20 @@ function header(route) {
           CAMPUS <span>CONNECT</span>
         </a>
 
-        <button
-          class="menu-toggle"
-          id="menu-toggle"
-          type="button"
-          aria-label="Open navigation menu"
-          aria-expanded="false"
-          aria-controls="main-navigation"
-        >
+        <button class="menu-toggle" id="menu-toggle"
+          type="button" aria-expanded="false">
           ☰ Menu
         </button>
 
         <nav class="navlinks" id="main-navigation"
-             aria-label="Main navigation" hidden>
+          aria-label="Main navigation" hidden>
           <a href="#home" class="${route === 'home' ? 'active' : ''}">
             Home
           </a>
-          ${categoryLinks}
+          ${links}
           <a href="#profile" class="${route === 'profile' ? 'active' : ''}">
             My profile
           </a>
-        </nav>
-      </div>
-    </header>`;
-}
-
-function categoryCards() {
-  return CATEGORIES.map(item => `<a class="category-card" href="#${item.id}">
-    <span class="category-icon" aria-hidden="true">${item.icon}</span><span><strong>${item.title}</strong><small>${item.description}</small></span>
-  </a>`).join('');
-}
-function listingCards(items) {
-  if (!items.length) return '<div class="empty">No sample listings are available for this category yet.</div>';
-  return `<div class="listing-grid">${items.map(item => {
-    const category = categoryById(item.category);
-    return `<article class="listing-card"><div class="listing-top"><span class="tag">${escapeHTML(item.label)}</span><span class="tag sample-tag">Sample</span></div><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.description)}</p><div class="listing-meta"><span>📍 ${escapeHTML(item.location)}</span><span>${category ? category.icon + ' ' + category.title : ''}</span></div></article>`;
-  }).join('')}</div>`;
-}
-
-function renderHome(user) {
-  return `${header('home')}
-    <main class="page campus-home">
-
-      <section class="home-intro">
-        <p class="eyebrow">YOUR STUDENT COMMUNITY</p>
-
-        <form id="campus-search" class="campus-search">
-          <span class="search-icon" aria-hidden="true">🔍</span>
-          <input
-            id="campus-search-input"
-            type="search"
-            placeholder="Search items, food, jobs, hostels..."
-            aria-label="Search campus categories"
-          >
-          <button type="submit" aria-label="Search">⌕</button>
-        </form>
-      </section>
-
-      <section aria-label="Campus Connect categories">
-        <h2 class="section-title">EXPLORE CAMPUS LIFE</h2>
-
-        <div class="category-grid" id="campus-category-grid">
-          ${categoryCards()}
-        </div>
-
-        <p id="campus-search-empty" class="empty" hidden>
-          No matching campus categories found.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="section-title">Example listings</h2>
-        <p class="muted small">
-          These are sample listings, not live posts.
-        </p>
-        ${listingCards(SAMPLE_LISTINGS.slice(0, 3))}
-      </section>
-
-      <section>
-        <h2 class="section-title">Announcements and activities</h2>
-        ${listingCards(
-          SAMPLE_LISTINGS.filter(item =>
-            ['events', 'announcements', 'internships']
-              .includes(item.category)
-          )
-        )}
-      </section>
-
-    </main>
-    <footer class="footer">Campus Connect Kenya</footer>`;
-}
-}
-
-function header(route) {
-  const categoryLinks = CATEGORIES.map(item => `
-    <a href="#${item.id}"
-       class="${route === item.id ? 'active' : ''}">
-      ${item.title}
-    </a>
-  `).join('');
-
-  return `
-    <header class="topbar">
-      <div class="navwrap">
-        <a class="brand" href="#home" aria-label="Campus Connect home">
-          CAMPUS <span>CONNECT</span>
-        </a>
-
-        <button
-  class="menu-toggle"
-  id="menu-toggle"
-  type="button"
-  onclick="const n=document.getElementById('main-navigation'); n.hidden=!n.hidden; this.textContent=n.hidden?'☰ Menu':'✕ Close';"
->
-  ☰ Menu
-</button>
-
-        <nav class="navlinks"
-             id="main-navigation"
-             aria-label="Main navigation"
-             hidden>
-          <a href="#home"
-             class="${route === 'home' ? 'active' : ''}">
-            Home
-          </a>
-
-          ${categoryLinks}
-
-          <a href="#profile"
-             class="${route === 'profile' ? 'active' : ''}">
-            My profile
-          </a>
-
           <button class="logout" id="logout-button" type="button">
             Sign out
           </button>
@@ -326,137 +279,329 @@ function header(route) {
       </div>
     </header>`;
 }
+
+function setupNavigation() {
+  const menu = document.getElementById('menu-toggle');
+  const nav = document.getElementById('main-navigation');
+
+  if (menu && nav) {
+    menu.addEventListener('click', () => {
+      nav.hidden = !nav.hidden;
+      menu.setAttribute('aria-expanded', String(!nav.hidden));
+      menu.textContent = nav.hidden ? '☰ Menu' : '✕ Close';
+    });
+
+    nav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        nav.hidden = true;
+        menu.setAttribute('aria-expanded', 'false');
+        menu.textContent = '☰ Menu';
+      });
+    });
+  }
+
+  const logout = document.getElementById('logout-button');
+  if (logout) {
+    logout.addEventListener('click', async () => {
+      logout.disabled = true;
+      logout.textContent = 'Signing out…';
+
+      const { error } = await supabaseClient.auth.signOut();
+
+      if (error) {
+        logout.disabled = false;
+        logout.textContent = 'Sign out';
+        alert(`Could not sign out: ${error.message}`);
+      } else {
+        currentSession = null;
+        go('login');
+        await render();
+      }
+    });
+  }
+}
+
+/* -------------------- HOME AND CATEGORY CARDS -------------------- */
+
+function categoryCards() {
+  return CATEGORIES.map(category => `
+    <a class="category-card" href="#${category.id}">
+      <span class="category-icon">${category.icon}</span>
+      <span>
+        <strong>${category.title}</strong>
+        <small>${category.description}</small>
+      </span>
+    </a>
+  `).join('');
+}
+
+function listingCards(items) {
+  if (!items.length) {
+    return '<p class="empty">No listings in this category yet.</p>';
+  }
+
+  return `<div class="listing-grid">
+    ${items.map(item => {
+      const category = categoryById(item.category);
+      return `
+        <article class="listing-card">
+          <div class="listing-top">
+            <span class="tag">${escapeHTML(item.label)}</span>
+            <span class="tag sample-tag">Demo</span>
+          </div>
+          <h3>${escapeHTML(item.title)}</h3>
+          <p>${escapeHTML(item.description)}</p>
+          <div class="listing-meta">
+            <span>📍 ${escapeHTML(item.location)}</span>
+            <span>${category ? category.icon + ' ' + category.title : ''}</span>
+          </div>
+        </article>`;
+    }).join('')}
+  </div>`;
+}
+
+function renderHome() {
+  return `${header('home')}
+    <main class="page campus-home">
+      <section class="home-intro">
+        <p class="eyebrow">YOUR STUDENT COMMUNITY</p>
+        <h1>Campus life, connected.</h1>
+        <p class="muted">Discover opportunities, services and student life.</p>
+
+        <form id="campus-search" class="campus-search">
+          <input id="campus-search-input" type="search"
+            placeholder="Search items, food, jobs, hostels…"
+            aria-label="Search campus categories">
+          <button type="submit" aria-label="Search">Search</button>
+        </form>
+      </section>
+
+      <section>
+        <h2 class="section-title">Explore campus life</h2>
+        <div class="category-grid" id="campus-category-grid">
+          ${categoryCards()}
+        </div>
+        <p id="campus-search-empty" class="empty" hidden>
+          No matching categories found.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="section-title">Explore listings</h2>
+        <p class="muted small">Demonstration content — not live advertisements.</p>
+        ${listingCards(SAMPLE_LISTINGS.slice(0, 3))}
+      </section>
+
+      <section>
+        <h2 class="section-title">Careers and campus updates</h2>
+        ${listingCards(SAMPLE_LISTINGS.filter(item =>
+          ['internships', 'events', 'announcements'].includes(item.category)
+        ))}
+      </section>
+    </main>
+    <footer class="footer">Campus Connect Kenya</footer>`;
+}
+
+function setupCampusSearch() {
+  const form = document.getElementById('campus-search');
+  const input = document.getElementById('campus-search-input');
+  const grid = document.getElementById('campus-category-grid');
+  const empty = document.getElementById('campus-search-empty');
+
+  if (!form || !input || !grid || !empty) return;
+
+  function filter() {
+    const query = input.value.trim().toLowerCase();
+    let count = 0;
+
+    grid.querySelectorAll('.category-card').forEach(card => {
+      const matches = card.textContent.toLowerCase().includes(query);
+      card.hidden = !matches;
+      if (matches) count++;
+    });
+
+    empty.hidden = count !== 0;
+  }
+
+  input.addEventListener('input', filter);
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    filter();
+  });
+}
+
+/* -------------------- CATEGORY PAGES -------------------- */
+
+function renderCategory(id) {
+  const category = categoryById(id);
+  if (!category) return renderHome();
+
+  const items = SAMPLE_LISTINGS.filter(item => item.category === id);
+
+  return `${header(id)}
+    <main class="page">
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">CAMPUS CONNECT</p>
+          <h1>${category.icon} ${category.title}</h1>
+          <p class="muted">${category.description}</p>
+        </div>
+        <a class="text-button" href="#home">← Back home</a>
+      </div>
+
+      <div class="notice show">
+        These are demonstration listings, not real user posts.
+      </div>
+
+      ${listingCards(items)}
+
+      <p class="muted small">
+        Real posting and database-backed listings need a listings table
+        and secure database policies in Supabase.
+      </p>
+    </main>
+    <footer class="footer">Campus Connect Kenya</footer>`;
+}
+
+/* -------------------- PROFILE -------------------- */
+
 function renderProfile(user) {
   const metadata = user.user_metadata || {};
-  const joined = user.created_at ? new Date(user.created_at).toLocaleDateString() : '—';
-  return `${header('profile')}<main class="page"><div class="page-head"><div><p class="eyebrow">ACCOUNT</p><h1>My profile</h1><p class="muted">Your signed-in account details.</p></div></div>
-    <section class="profile-panel"><div class="profile-row"><span class="muted">Full name</span><strong>${escapeHTML(metadata.full_name || 'Not added')}</strong></div>
-    <div class="profile-row"><span class="muted">Email</span><strong>${escapeHTML(user.email || '')}</strong></div>
-    <div class="profile-row"><span class="muted">Member since</span><strong>${escapeHTML(joined)}</strong></div></section>
-    </main><footer class="footer">Campus Connect Kenya</footer>`;
+  const joined = user.created_at
+    ? new Date(user.created_at).toLocaleDateString()
+    : '—';
+
+  return `${header('profile')}
+    <main class="page">
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">ACCOUNT</p>
+          <h1>My profile</h1>
+          <p class="muted">Your signed-in account details.</p>
+        </div>
+      </div>
+
+      <section class="profile-panel">
+        <div class="profile-row">
+          <span class="muted">Full name</span>
+          <strong>${escapeHTML(metadata.full_name || 'Not added')}</strong>
+        </div>
+        <div class="profile-row">
+          <span class="muted">Email</span>
+          <strong>${escapeHTML(user.email || '')}</strong>
+        </div>
+        <div class="profile-row">
+          <span class="muted">Member since</span>
+          <strong>${escapeHTML(joined)}</strong>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">Campus Connect Kenya</footer>`;
 }
 
-function setupCampusSearch() {
-  const form = document.getElementById('campus-search');
-  const input = document.getElementById('campus-search-input');
-  const grid = document.getElementById('campus-category-grid');
-  const empty = document.getElementById('campus-search-empty');
+/* -------------------- PAGE ROUTING -------------------- */
 
-  if (!form || !input || !grid || !empty) return;
-
-  function filterCategories() {
-    const query = input.value.trim().toLowerCase();
-    let visible = 0;
-
-    grid.querySelectorAll('.category-card').forEach(card => {
-      const matches = card.textContent.toLowerCase().includes(query);
-      card.hidden = !matches;
-      if (matches) visible++;
-    });
-
-    empty.hidden = visible !== 0;
-  }
-
-  input.addEventListener('input', filterCategories);
-
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    filterCategories();
-  });
-function setupCampusSearch() {
-  const form = document.getElementById('campus-search');
-  const input = document.getElementById('campus-search-input');
-  const grid = document.getElementById('campus-category-grid');
-  const empty = document.getElementById('campus-search-empty');
-
-  if (!form || !input || !grid || !empty) return;
-
-  function filterCategories() {
-    const query = input.value.trim().toLowerCase();
-    let visible = 0;
-
-    grid.querySelectorAll('.category-card').forEach(card => {
-      const matches = card.textContent.toLowerCase().includes(query);
-      card.hidden = !matches;
-      if (matches) visible++;
-    });
-
-    empty.hidden = visible !== 0;
-  }
-
-  input.addEventListener('input', filterCategories);
-
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    filterCategories();
-  });
-}
-
-  async function render() {
+async function render() {
   const thisRender = ++renderNumber;
+
   if (!supabaseClient) return;
+
   const { data, error } = await supabaseClient.auth.getSession();
   if (thisRender !== renderNumber) return;
-  if (error) return showConfigError(`Could not read your sign-in session: ${error.message}`);
+
+  if (error) {
+    showFatalError(`Could not read your session: ${error.message}`);
+    return;
+  }
+
   currentSession = data.session;
   const route = currentRoute();
-  const isAuthRoute = route === 'login' || route === 'register';
+  const isAuthRoute = ['login', 'register'].includes(route);
 
-  // Every page except login/register requires an authenticated Supabase session.
-  if (!currentSession && !isAuthRoute) {
-    if (window.location.hash !== '#login') window.location.hash = '#login';
-    renderAuth('login');
-    return;
-  }
-  if (currentSession && isAuthRoute) {
-    if (window.location.hash !== '#home') window.location.hash = '#home';
-    renderHome(currentSession.user);
-    return;
-  }
   if (!currentSession) {
+    if (!isAuthRoute) {
+      if (location.hash !== '#login') location.hash = '#login';
+      renderAuth('login');
+      return;
+    }
+
     renderAuth(route === 'register' ? 'register' : 'login');
     return;
   }
-if (route === 'home') {
-  app.innerHTML = renderHome(currentSession.user);
-  setupCampusSearch();
-}
+
+  if (isAuthRoute || !route) {
+    if (location.hash !== '#home') location.hash = '#home';
+    app.innerHTML = renderHome();
+    setupNavigation();
+    setupCampusSearch();
+    return;
   }
-  const logoutButton = document.getElementById('logout-button');
-  if (logoutButton) logoutButton.addEventListener('click', async () => {
-    logoutButton.disabled = true;
-    const { error: signOutError } = await supabaseClient.auth.signOut();
-    if (signOutError) {
-      logoutButton.disabled = false;
-      alert(`Could not sign out: ${signOutError.message}`);
-    } else {
-      currentSession = null;
-      go('login');
-    }
-  });
+
+  if (route === 'home') {
+    app.innerHTML = renderHome();
+    setupNavigation();
+    setupCampusSearch();
+    return;
+  }
+
+  if (route === 'profile') {
+    app.innerHTML = renderProfile(currentSession.user);
+    setupNavigation();
+    return;
+  }
+
+  if (categoryById(route)) {
+    app.innerHTML = renderCategory(route);
+    setupNavigation();
+    return;
+  }
+
+  go('home');
 }
 
+/* -------------------- STARTUP -------------------- */
+
 async function start() {
-  if (!window.supabase || typeof window.supabase.createClient !== 'function') {
-    return showConfigError('The Supabase library did not load. Check your internet connection and reload the page.');
+  if (!app) {
+    throw new Error('Could not find the #app element in index.html.');
   }
-  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-  window.addEventListener('hashchange', render);
+
+  if (!window.supabase ||
+      typeof window.supabase.createClient !== 'function') {
+    showFatalError(
+      'The Supabase library did not load. Check that index.html loads Supabase before script.js.'
+    );
+    return;
+  }
+
+  supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
   supabaseClient.auth.onAuthStateChange((event, session) => {
     currentSession = session;
+
     if (event === 'SIGNED_OUT') {
-      if (window.location.hash !== '#login') window.location.hash = '#login';
+      if (location.hash !== '#login') location.hash = '#login';
       renderAuth('login');
-    } else if (event === 'SIGNED_IN' && ['login', 'register', ''].includes(currentRoute())) {
-      if (window.location.hash !== '#home') window.location.hash = '#home';
-      renderHome(session.user);
+    } else if (event === 'SIGNED_IN') {
+      if (['', 'login', 'register'].includes(currentRoute())) {
+        if (location.hash !== '#home') location.hash = '#home';
+      }
+      render();
     }
   });
-  if (!window.location.hash) window.location.hash = '#login';
+
+  window.addEventListener('hashchange', () => render());
+
+  if (!location.hash) location.hash = '#login';
   await render();
 }
 
 start().catch(error => {
   console.error('Campus Connect startup error:', error);
-  showConfigError('The website could not start. Open the browser console for more details, then verify the Supabase configuration.');
+  showFatalError(
+    'The website could not start. Check index.html, the Supabase settings and the browser console.'
+  );
 });
