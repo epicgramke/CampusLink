@@ -361,13 +361,10 @@ async function render() {
     renderAuth(route === 'register' ? 'register' : 'login');
     return;
   }
-
-  if (route === 'home') app.innerHTML = renderHome(currentSession.user);
-  else if (route === 'profile') app.innerHTML = renderProfile(currentSession.user);
-  else if (categoryById(route)) app.innerHTML = renderCategory(currentSession.user, route);
-  else {
-    window.location.hash = '#home';
-    app.innerHTML = renderHome(currentSession.user);
+if (route === 'home') {
+  app.innerHTML = renderHome(currentSession.user);
+  setupCampusSearch();
+}
   }
   const logoutButton = document.getElementById('logout-button');
   if (logoutButton) logoutButton.addEventListener('click', async () => {
