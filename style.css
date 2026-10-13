@@ -56,10 +56,7 @@
     display: block;
     padding: 12px;
     border-bottom: 1px solid #29251c;
-  }
-}
-
-function getStyles() {
+  function getStyles() {
   return `
   <style>
     *{box-sizing:border-box}
