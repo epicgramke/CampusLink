@@ -131,8 +131,18 @@ function header() {
       <div class="wrap headrow">
 
         <a class="brand" href="#home">
-          <span class="logo">CC</span>
-          <span>
+          <img
+  class="logo"
+  src="
+<img
+  class="logo"
+  src="file_0000000035f4820ca4808dcd6dfe18e1.png"
+  alt="Campus Connect Kenya"
+>
+"
+  alt="Campus Connect Kenya"
+>
+ <span>
             CAMPUS CONNECT<br>
             <span class="brand-tag">YOUR CAMPUS. YOUR COMMUNITY.</span>
           </span>
