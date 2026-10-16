@@ -61,12 +61,18 @@
 <!-- HOME PAGE -->
 <section id="home-page" class="home-page hidden">
   <header class="topbar">
-    <button class="back" aria-label="Go back" onclick="history.back()">‹</button>
-    <div class="home-logo"><span>CAMPUS</span> CONNECT</div>
-    <button class="menu" onclick="toggleMenu()">☰ &nbsp; MENU</button>
-  </header>
+  <div class="brand">
+    <div class="home-logo">
+      <span>CAMPUS</span> CONNECT
+    </div>
+    <div class="brand-tagline">Your Campus. Your World.</div>
+  </div>
 
-  <div id="menuPanel" class="menu-panel">
+  <button class="menu" type="button" onclick="toggleMenu()">
+    ☰ &nbsp; MENU
+  </button>
+</header>
+ <div id="menuPanel" class="menu-panel">
     <button onclick="toggleMenu()">×</button>
     <a href="#market">Marketlife</a><a href="#food">Food</a><a href="#hostels">Hostels</a>
     <a href="#jobs">Jobs</a><a href="#internships">Internships</a><a href="#lost">Lost &amp; Found</a>
