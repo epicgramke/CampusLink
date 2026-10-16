@@ -644,3 +644,80 @@ button {
 .back {
 display: none !important;
 }
+
+/* SIGNATURE BRAND HEADER */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Allura&display=swap');
+
+.topbar {
+  min-height: 105px;
+  height: auto;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #050505;
+  border-bottom: 2px solid #3d3d3d;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.home-logo {
+  font-family: 'Barlow Condensed', Impact, sans-serif;
+  font-size: clamp(1.5rem, 5.5vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1;
+  color: #f7f7f7;
+  white-space: nowrap;
+}
+
+.home-logo span {
+  color: #ffe500;
+}
+
+.brand-tagline {
+  margin-top: 5px;
+  margin-left: 3px;
+  color: #ffe500;
+  font-family: 'Allura', cursive;
+  font-size: clamp(1.5rem, 5vw, 2.3rem);
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.menu-btn {
+  flex-shrink: 0;
+  background: #242424;
+  color: #ffe500;
+  border: 1.5px solid #806900;
+  border-radius: 40px;
+  padding: 14px 18px;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+/* SMALL PHONE SCREENS */
+@media (max-width: 380px) {
+  .topbar {
+    padding: 12px;
+    gap: 6px;
+  }
+
+  .home-logo {
+    font-size: 1.35rem;
+  }
+
+  .brand-tagline {
+    font-size: 1.35rem;
+  }
+
+  .menu-btn {
+    padding: 11px 12px;
+    font-size: 12px;
+  }
+}
