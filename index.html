@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050505">
+  <title>EarnLink | Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">EARN<span>LINK</span></a>
+    <a class="logout-link" href="#" onclick="logout(); return false;">Logout</a>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">WELCOME TO EARNLINK</p>
+        <h1>Earn more. <span>Do more.</span></h1>
+        <p>Complete verified YouTube content-review tasks and track your earnings.</p>
+      </div>
+      <a class="btn" href="tasks.html">View Tasks →</a>
+    </section>
+
+    <section class="stats-grid">
+      <div class="stat-card"><small>AVAILABLE</small><strong id="homeAvailable">KSh 0.00</strong></div>
+      <div class="stat-card"><small>PENDING</small><strong id="homePending">KSh 0.00</strong></div>
+      <div class="stat-card"><small>TOTAL EARNED</small><strong id="homeTotal">KSh 0.00</strong></div>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">HOW IT WORKS</p>
+      <h2>Complete tasks</h2>
+      <div class="steps">
+        <div class="step"><span>01</span><div><strong>Choose a task</strong><p>Open an available YouTube content-review task.</p></div></div>
+        <div class="step"><span>02</span><div><strong>Review the content</strong><p>Follow the instructions and review the assigned content.</p></div></div>
+        <div class="step"><span>03</span><div><strong>Submit proof</strong><p>Upload your screen recording for review.</p></div></div>
+        <div class="step"><span>04</span><div><strong>Get approved</strong><p>Approved rewards appear in your available balance.</p></div></div>
+      </div>
+    </section>
+
+    <nav class="bottom-navigation" aria-label="Main navigation">
+      <a class="active" href="index.html"><span class="nav-icon">⌂</span><small>Home</small></a>
+      <a href="tasks.html"><span class="nav-icon">▦</span><small>Tasks</small></a>
+      <a href="wallet.html"><span class="nav-icon">▣</span><small>Wallet</small></a>
+    </nav>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

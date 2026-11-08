@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050505">
+  <title>EarnLink | Task</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">EARN<span>LINK</span></a>
+    <a class="logout-link" href="#" onclick="logout(); return false;">Logout</a>
+  </header>
+
+  <main class="container task-container">
+    <a href="tasks.html" class="back-link">← Back to Tasks</a>
+    <section class="task-detail-card">
+      <span class="tag">YOUTUBE CONTENT REVIEW</span>
+      <h1 id="taskName">Loading Task...</h1>
+      <p class="muted">Review the assigned YouTube content and submit your evidence for review.</p>
+
+      <div class="reward-box"><span>Task Reward</span><strong id="reward">KSh 10</strong></div>
+
+      <div class="detail-section">
+        <h3>TASK INSTRUCTIONS</h3>
+        <div id="instructions" class="instructions">Loading instructions...</div>
+      </div>
+
+      <div class="detail-section">
+        <h3>OPEN YOUTUBE</h3>
+        <a id="target" class="youtube-button" href="#" target="_blank" rel="noopener noreferrer">Open YouTube Content</a>
+      </div>
+
+      <div class="detail-section">
+        <h3>TASK TIMER</h3>
+        <div class="timer-box">
+          <div id="timer">10s</div>
+          <p class="muted">Complete the review before submitting.</p>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3>SUBMIT YOUR PROOF</h3>
+        <div class="upload-box">
+          <strong>📹 Screen Recording</strong>
+          <p class="muted">Upload a video recording showing your task completion.</p>
+          <input type="file" id="proof" accept="video/*">
+        </div>
+        <p id="taskMsg" class="task-message">Complete the review and select your recording.</p>
+      </div>
+
+      <button id="submitTask" class="btn full submit-task" disabled>Submit for Review</button>
+    </section>
+    <p class="footer">© 2026 EarnLink</p>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

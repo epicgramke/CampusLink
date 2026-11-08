@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050505">
+  <title>EarnLink | Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-body">
+  <main class="auth-card">
+    <a class="brand auth-brand" href="login.html">EARN<span>LINK</span></a>
+    <p class="eyebrow">WELCOME BACK</p>
+    <h1>Login</h1>
+    <p class="muted">Access your EarnLink account.</p>
+
+    <form id="loginForm">
+      <label for="phone">Phone number</label>
+      <input id="phone" type="tel" placeholder="07XXXXXXXX" autocomplete="tel" required>
+
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+
+      <button class="btn full" type="submit">Login</button>
+      <p id="msg" class="msg"></p>
+    </form>
+
+    <p class="center">Don't have an account? <a href="signup.html">Create one</a></p>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

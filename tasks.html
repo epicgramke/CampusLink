@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050505">
+  <title>EarnLink | Tasks</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">EARN<span>LINK</span></a>
+    <a class="logout-link" href="#" onclick="logout(); return false;">Logout</a>
+  </header>
+
+  <main class="container">
+    <section class="page-title">
+      <p class="eyebrow">AVAILABLE WORK</p>
+      <h1>YouTube Tasks</h1>
+      <p>Review assigned YouTube content and submit your proof.</p>
+    </section>
+
+    <section id="taskList" class="task-list">
+      <div class="loading">Loading tasks...</div>
+    </section>
+
+    <nav class="bottom-navigation" aria-label="Main navigation">
+      <a href="index.html"><span class="nav-icon">⌂</span><small>Home</small></a>
+      <a class="active" href="tasks.html"><span class="nav-icon">▦</span><small>Tasks</small></a>
+      <a href="wallet.html"><span class="nav-icon">▣</span><small>Wallet</small></a>
+    </nav>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

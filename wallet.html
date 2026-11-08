@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050505">
+  <title>EarnLink | Wallet</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">EARN<span>LINK</span></a>
+    <a class="logout-link" href="#" onclick="logout(); return false;">Logout</a>
+  </header>
+
+  <main class="container">
+    <section class="page-title">
+      <p class="eyebrow">YOUR MONEY</p>
+      <h1>Wallet</h1>
+      <p>Track your approved and pending earnings.</p>
+    </section>
+
+    <section class="balance-grid">
+      <div class="balance-card"><small>AVAILABLE BALANCE</small><strong id="availableBalance">KSh 0.00</strong></div>
+      <div class="stat-card"><small>PENDING</small><strong id="pendingBalance">KSh 0.00</strong></div>
+      <div class="stat-card"><small>TOTAL EARNED</small><strong id="totalEarned">KSh 0.00</strong></div>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">WITHDRAW</p>
+      <h2>M-PESA Withdrawal</h2>
+      <form id="withdrawForm">
+        <label for="mpesaNumber">M-PESA Number</label>
+        <input type="tel" id="mpesaNumber" placeholder="07XXXXXXXX" pattern="(07|01)[0-9]{8}|254(7|1)[0-9]{8}" required>
+        <label for="withdrawAmount">Amount (KSh)</label>
+        <input type="number" id="withdrawAmount" placeholder="Enter amount" min="1" step="1" required>
+        <button type="submit" class="btn full">Request Withdrawal</button>
+      </form>
+      <p id="withdrawMessage" class="muted">Withdrawals require backend M-PESA integration for real payments.</p>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">ACTIVITY</p>
+      <h2>Transaction History</h2>
+      <div id="transactionHistory"><p class="muted">No transactions yet.</p></div>
+    </section>
+
+    <nav class="bottom-navigation">
+      <a href="index.html"><span class="nav-icon">⌂</span><small>Home</small></a>
+      <a href="tasks.html"><span class="nav-icon">▦</span><small>Tasks</small></a>
+      <a class="active" href="wallet.html"><span class="nav-icon">▣</span><small>Wallet</small></a>
+    </nav>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
